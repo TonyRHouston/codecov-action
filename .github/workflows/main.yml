@@ -1,136 +1,139 @@
----
 name: Workflow for Codecov Action
-on: [push, pull_request]
+on:
+- push
+- pull_request
 permissions:
   id-token: write
   contents: read
 jobs:
   run:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os:
+        - macos-latest
+        - windows-latest
+        - ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-        with:
-          submodules: 'true'
-      - name: Install dependencies
-        run: pip install -r src/scripts/app/requirements.txt
-      - name: Run tests and collect coverage
-        run: pytest src/scripts/app/ --cov
-      - name: Upload coverage to Codecov (script)
-        uses: ./
-        with:
-          fail_ci_if_error: true
-          files: ./coverage/script/coverage-final.json
-          flags: script-${{ matrix.os }}
-          name: codecov-script
-          verbose: true
-          skip_validation: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload coverage to Codecov (demo)
-        uses: ./
-        with:
-          fail_ci_if_error: true
-          files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
-          flags: demo-${{ matrix.os }}
-          name: codecov-demo
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload coverage to Codecov (version)
-        uses: ./
-        with:
-          fail_ci_if_error: true
-          files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
-          flags: version-${{ matrix.os }}
-          name: codecov-version
-          version: v9.1.0
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
+    - name: Checkout
+      uses: actions/checkout@v4.2.2
+      with:
+        submodules: true
+    - name: Install dependencies
+      run: pip install -r src/scripts/app/requirements.txt
+    - name: Run tests and collect coverage
+      run: pytest src/scripts/app/ --cov
+    - name: Upload coverage to Codecov (script)
+      uses: ./
+      with:
+        fail_ci_if_error: true
+        files: ./coverage/script/coverage-final.json
+        flags: script-${{ matrix.os }}
+        name: codecov-script
+        verbose: true
+        skip_validation: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage to Codecov (demo)
+      uses: ./
+      with:
+        fail_ci_if_error: true
+        files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
+        flags: demo-${{ matrix.os }}
+        name: codecov-demo
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage to Codecov (version)
+      uses: ./
+      with:
+        fail_ci_if_error: true
+        files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
+        flags: version-${{ matrix.os }}
+        name: codecov-version
+        version: v9.1.0
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
   run-macos-latest-xlarge:
     if: github.head.repo.full_name == 'codecov/codecov-action'
-    runs-on: macos-latest-xlarge
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-        with:
-          submodules: 'true'
-      - name: Install dependencies
-        run: pip install -r src/scripts/app/requirements.txt
-      - name: Run tests and collect coverage
-        run: pytest src/scripts/app/ --cov
-      - name: Upload coverage to Codecov (script)
-        uses: ./
-        with:
-          fail_ci_if_error: true
-          files: ./coverage/script/coverage-final.json
-          flags: script-macos-latest-xlarge
-          name: codecov-script
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload coverage to Codecov (demo)
-        uses: ./
-        with:
-          fail_ci_if_error: true
-          files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
-          flags: demo-macos-latest-xlarge
-          name: codecov-demo
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload coverage to Codecov (oidc)
-        uses: ./
-        with:
-          files: ./coverage/script/coverage-final.json
-          flags: script-${{ matrix.os }}
-          name: codecov-script
-          use_oidc: true
-          verbose: true
-      - name: Upload coverage to Codecov (version)
-        uses: ./
-        with:
-          fail_ci_if_error: true
-          files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
-          flags: version-maxos-latest-xlarge
-          name: codecov-version
-          version: v9.1.0
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
+    - name: Checkout
+      uses: actions/checkout@v4.2.2
+      with:
+        submodules: true
+    - name: Install dependencies
+      run: pip install -r src/scripts/app/requirements.txt
+    - name: Run tests and collect coverage
+      run: pytest src/scripts/app/ --cov
+    - name: Upload coverage to Codecov (script)
+      uses: ./
+      with:
+        fail_ci_if_error: true
+        files: ./coverage/script/coverage-final.json
+        flags: script-macos-latest-xlarge
+        name: codecov-script
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage to Codecov (demo)
+      uses: ./
+      with:
+        fail_ci_if_error: true
+        files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
+        flags: demo-macos-latest-xlarge
+        name: codecov-demo
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage to Codecov (oidc)
+      uses: ./
+      with:
+        files: ./coverage/script/coverage-final.json
+        flags: script-${{ matrix.os }}
+        name: codecov-script
+        use_oidc: true
+        verbose: true
+    - name: Upload coverage to Codecov (version)
+      uses: ./
+      with:
+        fail_ci_if_error: true
+        files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
+        flags: version-maxos-latest-xlarge
+        name: codecov-version
+        version: v9.1.0
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
   run-container:
     runs-on: ubuntu-latest
     container: python:latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-        with:
-          submodules: 'true'
-      - name: Install deps
-        run: |
-          apt-get install git
-      - name: Upload coverage to Codecov (script)
-        uses: ./
-        with:
-          files: ./coverage/script/coverage-final.json
-          flags: script-${{ matrix.os }}
-          name: codecov-script
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload coverage to Codecov (demo)
-        uses: ./
-        with:
-          files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
-          flags: demo-${{ matrix.os }}
-          name: codecov-demo
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Upload coverage to Codecov (version)
-        uses: ./
-        with:
-          files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
-          flags: version-${{ matrix.os }}
-          name: codecov-version
-          version: v9.1.0
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Checkout
+      uses: actions/checkout@v4.2.2
+      with:
+        submodules: true
+    - name: Install deps
+      run: 'apt-get install git
+
+        '
+    - name: Upload coverage to Codecov (script)
+      uses: ./
+      with:
+        files: ./coverage/script/coverage-final.json
+        flags: script-${{ matrix.os }}
+        name: codecov-script
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage to Codecov (demo)
+      uses: ./
+      with:
+        files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
+        flags: demo-${{ matrix.os }}
+        name: codecov-demo
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage to Codecov (version)
+      uses: ./
+      with:
+        files: ./coverage/calculator/coverage-final.json,./coverage/coverage-test/coverage-final.json,./coverage/coverage-final.json
+        flags: version-${{ matrix.os }}
+        name: codecov-version
+        version: v9.1.0
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}
